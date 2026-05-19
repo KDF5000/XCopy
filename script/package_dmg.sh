@@ -2,8 +2,13 @@
 set -euo pipefail
 
 APP_NAME="XCopy"
-BUNDLE_ID="com.local.XCopy"
+BUNDLE_ID="${XCOPY_BUNDLE_ID:-com.local.XCopy}"
 MIN_SYSTEM_VERSION="14.0"
+CODE_SIGN_IDENTITY="${XCOPY_CODESIGN_IDENTITY:-}"
+NOTARY_APPLE_ID="${XCOPY_NOTARY_APPLE_ID:-}"
+NOTARY_TEAM_ID="${XCOPY_NOTARY_TEAM_ID:-}"
+NOTARY_PASSWORD="${XCOPY_NOTARY_PASSWORD:-}"
+NOTARY_KEYCHAIN_PROFILE="${XCOPY_NOTARY_KEYCHAIN_PROFILE:-}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
@@ -55,11 +60,72 @@ PLIST
 
 ln -s /Applications "$DMG_ROOT/Applications"
 
+if [[ -n "$CODE_SIGN_IDENTITY" ]]; then
+  echo "Signing $APP_NAME.app with $CODE_SIGN_IDENTITY..."
+  codesign \
+    --force \
+    --deep \
+    --strict \
+    --options runtime \
+    --timestamp \
+    --sign "$CODE_SIGN_IDENTITY" \
+    "$APP_BUNDLE"
+else
+  echo "No XCOPY_CODESIGN_IDENTITY set; applying ad-hoc signature for local validation only."
+  codesign \
+    --force \
+    --deep \
+    --strict \
+    --sign - \
+    "$APP_BUNDLE"
+fi
+
+codesign --verify --deep --strict --verbose=2 "$APP_BUNDLE"
+
 hdiutil create \
   -volname "$APP_NAME" \
   -srcfolder "$DMG_ROOT" \
   -ov \
   -format UDZO \
   "$DMG_PATH"
+
+if [[ -n "$CODE_SIGN_IDENTITY" ]]; then
+  echo "Signing $APP_NAME.dmg with $CODE_SIGN_IDENTITY..."
+  codesign \
+    --force \
+    --timestamp \
+    --sign "$CODE_SIGN_IDENTITY" \
+    "$DMG_PATH"
+  codesign --verify --verbose=2 "$DMG_PATH"
+fi
+
+if [[ -n "$NOTARY_KEYCHAIN_PROFILE" || -n "$NOTARY_APPLE_ID" || -n "$NOTARY_TEAM_ID" || -n "$NOTARY_PASSWORD" ]]; then
+  if [[ -z "$CODE_SIGN_IDENTITY" ]]; then
+    echo "Notarization requires XCOPY_CODESIGN_IDENTITY." >&2
+    exit 1
+  fi
+
+  echo "Submitting $APP_NAME.dmg for notarization..."
+  if [[ -n "$NOTARY_KEYCHAIN_PROFILE" ]]; then
+    xcrun notarytool submit "$DMG_PATH" \
+      --keychain-profile "$NOTARY_KEYCHAIN_PROFILE" \
+      --wait
+  else
+    if [[ -z "$NOTARY_APPLE_ID" || -z "$NOTARY_TEAM_ID" || -z "$NOTARY_PASSWORD" ]]; then
+      echo "Notarization requires either XCOPY_NOTARY_KEYCHAIN_PROFILE or XCOPY_NOTARY_APPLE_ID, XCOPY_NOTARY_TEAM_ID, and XCOPY_NOTARY_PASSWORD." >&2
+      exit 1
+    fi
+
+    xcrun notarytool submit "$DMG_PATH" \
+      --apple-id "$NOTARY_APPLE_ID" \
+      --team-id "$NOTARY_TEAM_ID" \
+      --password "$NOTARY_PASSWORD" \
+      --wait
+  fi
+
+  echo "Stapling notarization ticket..."
+  xcrun stapler staple "$DMG_PATH"
+  xcrun stapler validate "$DMG_PATH"
+fi
 
 echo "Created $DMG_PATH"

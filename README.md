@@ -121,6 +121,36 @@ The DMG is written to:
 dist/XCopy.dmg
 ```
 
+For a GitHub release that opens without Gatekeeper warnings, build with a
+Developer ID Application certificate and notarize the DMG:
+
+```bash
+XCOPY_BUNDLE_ID="com.your-team.XCopy" \
+XCOPY_CODESIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" \
+XCOPY_NOTARY_KEYCHAIN_PROFILE="xcopy-notary" \
+./script/package_dmg.sh
+```
+
+Create the keychain profile once with:
+
+```bash
+xcrun notarytool store-credentials xcopy-notary \
+  --apple-id "you@example.com" \
+  --team-id "TEAMID" \
+  --password "app-specific-password"
+```
+
+You can also skip `XCOPY_NOTARY_KEYCHAIN_PROFILE` and pass
+`XCOPY_NOTARY_APPLE_ID`, `XCOPY_NOTARY_TEAM_ID`, and
+`XCOPY_NOTARY_PASSWORD` directly.
+
+Validate the final artifact:
+
+```bash
+spctl -a -vvv -t open dist/dmg-root/XCopy.app
+xcrun stapler validate dist/XCopy.dmg
+```
+
 ## Requirements
 
 - macOS 14+
