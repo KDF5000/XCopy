@@ -18,9 +18,8 @@ struct XCopyApp: App {
         Window("远端配置", id: "hosts") {
             HostDetailView()
                 .environmentObject(store)
-                .frame(minWidth: 640, minHeight: 380)
         }
-        .defaultSize(width: 720, height: 420)
+        .defaultSize(width: 720, height: 520)
         .commands {
             CommandMenu("XCopy") {
                 Button("打开远端配置") {
