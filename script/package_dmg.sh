@@ -25,6 +25,11 @@ DMG_PATH="$DIST_DIR/$APP_NAME.dmg"
 swift build -c release
 BUILD_BINARY="$(swift build -c release --show-bin-path)/$APP_NAME"
 
+if hdiutil info | /usr/bin/grep -F -q "image-path      : $DMG_PATH"; then
+  echo "$DMG_PATH is currently mounted. Eject it before packaging." >&2
+  exit 1
+fi
+
 rm -rf "$DMG_ROOT" "$DMG_PATH"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES"
 
@@ -64,8 +69,6 @@ if [[ -n "$CODE_SIGN_IDENTITY" ]]; then
   echo "Signing $APP_NAME.app with $CODE_SIGN_IDENTITY..."
   codesign \
     --force \
-    --deep \
-    --strict \
     --options runtime \
     --timestamp \
     --sign "$CODE_SIGN_IDENTITY" \
@@ -74,8 +77,6 @@ else
   echo "No XCOPY_CODESIGN_IDENTITY set; applying ad-hoc signature for local validation only."
   codesign \
     --force \
-    --deep \
-    --strict \
     --sign - \
     "$APP_BUNDLE"
 fi
@@ -109,6 +110,8 @@ if [[ -n "$NOTARY_KEYCHAIN_PROFILE" || -n "$NOTARY_APPLE_ID" || -n "$NOTARY_TEAM
   if [[ -n "$NOTARY_KEYCHAIN_PROFILE" ]]; then
     xcrun notarytool submit "$DMG_PATH" \
       --keychain-profile "$NOTARY_KEYCHAIN_PROFILE" \
+      --no-s3-acceleration \
+      --timeout 10m \
       --wait
   else
     if [[ -z "$NOTARY_APPLE_ID" || -z "$NOTARY_TEAM_ID" || -z "$NOTARY_PASSWORD" ]]; then
@@ -120,6 +123,8 @@ if [[ -n "$NOTARY_KEYCHAIN_PROFILE" || -n "$NOTARY_APPLE_ID" || -n "$NOTARY_TEAM
       --apple-id "$NOTARY_APPLE_ID" \
       --team-id "$NOTARY_TEAM_ID" \
       --password "$NOTARY_PASSWORD" \
+      --no-s3-acceleration \
+      --timeout 10m \
       --wait
   fi
 
