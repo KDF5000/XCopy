@@ -38,12 +38,22 @@ struct XCopyApp: App {
 }
 
 private struct MenuBarIcon: View {
+    private let iconSize: CGFloat = 18
+
     var body: some View {
-        if let appIcon = NSImage(named: "AppIcon") {
-            Image(nsImage: appIcon)
-        } else {
-            Image(systemName: "doc.on.clipboard")
+        Group {
+            if let appIcon = NSImage(named: "AppIcon") {
+                Image(nsImage: appIcon)
+                    .resizable()
+                    .scaledToFit()
+            } else {
+                Image(systemName: "doc.on.clipboard")
+                    .resizable()
+                    .scaledToFit()
+            }
         }
+        .frame(width: iconSize, height: iconSize)
+        .accessibilityLabel("XCopy")
     }
 }
 
