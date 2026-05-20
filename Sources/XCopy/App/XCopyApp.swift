@@ -11,7 +11,7 @@ struct XCopyApp: App {
             MenuBarPanelView()
                 .environmentObject(store)
         } label: {
-            AppIconView(pointSize: 16)
+            MenuBarIconView(pointSize: 16)
         }
         .menuBarExtraStyle(.window)
 
