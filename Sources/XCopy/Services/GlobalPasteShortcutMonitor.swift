@@ -135,18 +135,6 @@ final class GlobalPasteShortcutMonitor {
         let text = focusedWindowSearchText()
         guard !text.isEmpty else { return nil }
 
-        if let token = xcopySessionToken(in: text) {
-            if let target = sessionRegistry.target(for: token),
-               let hostID = matchingHostID(for: target) {
-                return hostID
-            }
-
-            if let titleTarget = xcopySessionTarget(in: text),
-               let hostID = matchingHostID(for: titleTarget) {
-                return hostID
-            }
-        }
-
         return matchingHostID(for: text)
     }
 
@@ -166,37 +154,6 @@ final class GlobalPasteShortcutMonitor {
                 normalizedText.contains(token)
             }
         }?.id
-    }
-
-    private func xcopySessionToken(in text: String) -> String? {
-        guard let range = text.range(of: "xcopy:") else {
-            return nil
-        }
-
-        let remainder = text[range.upperBound...]
-        let token = remainder.prefix { character in
-            character.isLetter || character.isNumber || character == "-"
-        }
-
-        return token.isEmpty ? nil : String(token)
-    }
-
-    private func xcopySessionTarget(in text: String) -> String? {
-        guard let token = xcopySessionToken(in: text),
-              let tokenRange = text.range(of: token) else {
-            return nil
-        }
-
-        let remainder = text[tokenRange.upperBound...]
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !remainder.isEmpty else { return nil }
-
-        let target = remainder
-            .components(separatedBy: CharacterSet.whitespacesAndNewlines)
-            .first?
-            .trimmingCharacters(in: CharacterSet(charactersIn: "()[]{}"))
-
-        return target?.isEmpty == false ? target : nil
     }
 
     private func focusedTerminalTTY() -> String? {

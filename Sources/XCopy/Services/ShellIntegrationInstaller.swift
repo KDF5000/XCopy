@@ -130,11 +130,7 @@ struct ShellIntegrationInstaller {
           local root="$HOME/.xcopy"
           local sessions="$root/sessions"
           local tty_sessions="$sessions/by-tty"
-          local token
-          token="$(uuidgen | tr '[:upper:]' '[:lower:]')"
-
           mkdir -p "$sessions" "$tty_sessions"
-          printf '%s\\n' "$target" > "$sessions/$token"
 
           local tty_path
           tty_path="$(tty 2>/dev/null || true)"
@@ -150,17 +146,12 @@ struct ShellIntegrationInstaller {
               "$(date +%s)" > "$tty_session"
           fi
 
-          local title="xcopy:$token $target"
-          printf '\\033]0;%s\\007' "$title"
-
           /usr/bin/ssh "$@"
           local code=$?
 
-          rm -f "$sessions/$token"
           if [ -n "$tty_session" ]; then
             rm -f "$tty_session"
           fi
-          printf '\\033]0;%s\\007' "$target"
 
           return "$code"
         }

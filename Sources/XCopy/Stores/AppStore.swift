@@ -52,7 +52,7 @@ final class AppStore: ObservableObject {
     private let didRunFirstLaunchSetupKey = "didRunFirstLaunchSetup"
     private let shellIntegrationVersionKey = "shellIntegrationVersion"
     private let pasteShortcutKey = "pasteShortcut"
-    private let currentShellIntegrationVersion = 2
+    private let currentShellIntegrationVersion = 3
     private var isLoading = false
 
     init() {
