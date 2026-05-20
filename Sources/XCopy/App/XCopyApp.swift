@@ -7,9 +7,11 @@ struct XCopyApp: App {
     @StateObject private var store = AppStore()
 
     var body: some Scene {
-        MenuBarExtra("XCopy", systemImage: "doc.on.clipboard") {
+        MenuBarExtra {
             MenuBarPanelView()
                 .environmentObject(store)
+        } label: {
+            MenuBarIconView(pointSize: 16)
         }
         .menuBarExtraStyle(.window)
 

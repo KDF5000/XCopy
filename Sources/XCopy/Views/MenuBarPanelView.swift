@@ -44,9 +44,7 @@ struct MenuBarPanelView: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            Image(systemName: "doc.on.clipboard")
-                .font(.title2)
-                .foregroundStyle(.blue)
+            AppIconView(pointSize: 20)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("XCopy")
