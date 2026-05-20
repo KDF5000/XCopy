@@ -7,9 +7,11 @@ struct XCopyApp: App {
     @StateObject private var store = AppStore()
 
     var body: some Scene {
-        MenuBarExtra("XCopy", systemImage: "doc.on.clipboard") {
+        MenuBarExtra {
             MenuBarPanelView()
                 .environmentObject(store)
+        } label: {
+            MenuBarIcon()
         }
         .menuBarExtraStyle(.window)
 
@@ -31,6 +33,16 @@ struct XCopyApp: App {
         Settings {
             SettingsView()
                 .environmentObject(store)
+        }
+    }
+}
+
+private struct MenuBarIcon: View {
+    var body: some View {
+        if let appIcon = NSImage(named: "AppIcon") {
+            Image(nsImage: appIcon)
+        } else {
+            Image(systemName: "doc.on.clipboard")
         }
     }
 }
