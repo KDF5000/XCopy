@@ -41,7 +41,7 @@ private extension NSImage {
         defer {
             image.unlockFocus()
             image.size = targetSize
-            image.isTemplate = true
+            image.isTemplate = false
         }
 
         guard let context = NSGraphicsContext.current?.cgContext else {
@@ -62,51 +62,16 @@ private extension NSImage {
             NSBezierPath(roundedRect: rect(x, y, width, height), xRadius: radius * scale, yRadius: radius * scale)
         }
 
-        NSColor.black.withAlphaComponent(0.55).setStroke()
-        let lineWidth = max(1.2, 1.45 * scale)
-
-        let backDocument = roundedRect(3.1, 2.2, 6.5, 9.2, radius: 1.6)
-        backDocument.lineWidth = lineWidth
-        backDocument.stroke()
-
-        NSColor.black.setStroke()
-        let frontDocument = roundedRect(5.2, 1.3, 7.2, 10.4, radius: 1.7)
-        frontDocument.lineWidth = lineWidth
-        frontDocument.stroke()
-
-        for y in [4.2, 6.2, 8.2] {
-            let line = NSBezierPath()
-            line.move(to: CGPoint(x: 7.0 * scale, y: y * scale))
-            line.line(to: CGPoint(x: 10.7 * scale, y: y * scale))
-            line.lineCapStyle = .round
-            line.lineWidth = lineWidth
-            line.stroke()
-        }
-
-        let terminalRect = roundedRect(2.5, 9.8, 7.4, 3.9, radius: 1.2)
         NSColor.black.setFill()
-        terminalRect.fill()
+        roundedRect(1.1, 1.1, 13.8, 13.8, radius: 3.2).fill()
 
-        NSGraphicsContext.saveGraphicsState()
-        NSGraphicsContext.current?.compositingOperation = .clear
+        NSColor.white.setFill()
+        roundedRect(5.1, 3.2, 6.6, 9.2, radius: 1.3).fill()
 
-        let prompt = NSBezierPath()
-        prompt.move(to: CGPoint(x: 4.1 * scale, y: 10.9 * scale))
-        prompt.line(to: CGPoint(x: 5.2 * scale, y: 11.75 * scale))
-        prompt.line(to: CGPoint(x: 4.1 * scale, y: 12.6 * scale))
-        prompt.lineCapStyle = .round
-        prompt.lineJoinStyle = .round
-        prompt.lineWidth = max(1, 1.1 * scale)
-        prompt.stroke()
+        NSColor.black.setFill()
+        roundedRect(6.7, 10.5, 3.4, 1.0, radius: 0.5).fill()
 
-        let cursor = NSBezierPath()
-        cursor.move(to: CGPoint(x: 6.3 * scale, y: 12.55 * scale))
-        cursor.line(to: CGPoint(x: 8.0 * scale, y: 12.55 * scale))
-        cursor.lineCapStyle = .round
-        cursor.lineWidth = max(1, 1.1 * scale)
-        cursor.stroke()
-
-        NSGraphicsContext.restoreGraphicsState()
+        roundedRect(6.8, 6.4, 3.2, 1.2, radius: 0.6).fill()
 
         return image
     }
