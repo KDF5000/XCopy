@@ -128,11 +128,14 @@ func drawIcon(pixels: Int, to url: URL) throws {
     let terminalRect = CGRect(x: size * 0.23, y: size * 0.18, width: size * 0.39, height: size * 0.19)
     drawRoundedRect(terminalRect, radius: size * 0.045, fill: color(13, 30, 53), stroke: color(255, 255, 255, 0.18), lineWidth: max(1, size * 0.008))
 
+    let promptCenterY = terminalRect.midY
+    let promptHalfHeight = size * 0.04
+
     color(94, 234, 212).setStroke()
     let prompt = NSBezierPath()
-    prompt.move(to: CGPoint(x: size * 0.29, y: size * 0.275))
-    prompt.line(to: CGPoint(x: size * 0.34, y: size * 0.235))
-    prompt.line(to: CGPoint(x: size * 0.29, y: size * 0.195))
+    prompt.move(to: CGPoint(x: size * 0.29, y: promptCenterY + promptHalfHeight))
+    prompt.line(to: CGPoint(x: size * 0.34, y: promptCenterY))
+    prompt.line(to: CGPoint(x: size * 0.29, y: promptCenterY - promptHalfHeight))
     prompt.lineCapStyle = .round
     prompt.lineJoinStyle = .round
     prompt.lineWidth = max(1.5, size * 0.022)
@@ -140,8 +143,8 @@ func drawIcon(pixels: Int, to url: URL) throws {
 
     color(94, 234, 212).setStroke()
     let cursor = NSBezierPath()
-    cursor.move(to: CGPoint(x: size * 0.40, y: size * 0.205))
-    cursor.line(to: CGPoint(x: size * 0.50, y: size * 0.205))
+    cursor.move(to: CGPoint(x: size * 0.40, y: promptCenterY - promptHalfHeight))
+    cursor.line(to: CGPoint(x: size * 0.50, y: promptCenterY - promptHalfHeight))
     cursor.lineCapStyle = .round
     cursor.lineWidth = max(1.5, size * 0.022)
     cursor.stroke()
