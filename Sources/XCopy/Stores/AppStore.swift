@@ -50,7 +50,9 @@ final class AppStore: ObservableObject {
     private let selectedHostIDKey = "selectedHostID"
     private let autoUploadEnabledKey = "autoUploadEnabled"
     private let didRunFirstLaunchSetupKey = "didRunFirstLaunchSetup"
+    private let shellIntegrationVersionKey = "shellIntegrationVersion"
     private let pasteShortcutKey = "pasteShortcut"
+    private let currentShellIntegrationVersion = 2
     private var isLoading = false
 
     init() {
@@ -167,13 +169,25 @@ final class AppStore: ObservableObject {
     }
 
     func installShellIntegration() {
+        installShellIntegration(updateStatus: true)
+    }
+
+    @discardableResult
+    private func installShellIntegration(updateStatus: Bool) -> Bool {
         do {
             try shellIntegrationInstaller.install()
-            statusMessage = "SSH 集成已安装，重新打开终端后生效"
-            lastError = nil
+            defaults.set(currentShellIntegrationVersion, forKey: shellIntegrationVersionKey)
+            if updateStatus {
+                statusMessage = "SSH 集成已安装，重新打开终端后生效"
+                lastError = nil
+            }
+            return true
         } catch {
-            statusMessage = "SSH 集成安装失败"
-            lastError = error.localizedDescription
+            if updateStatus {
+                statusMessage = "SSH 集成安装失败"
+                lastError = error.localizedDescription
+            }
+            return false
         }
     }
 
@@ -235,13 +249,25 @@ final class AppStore: ObservableObject {
     }
 
     private func runFirstLaunchSetupIfNeeded() {
-        guard !defaults.bool(forKey: didRunFirstLaunchSetupKey) else { return }
+        let isFirstLaunch = !defaults.bool(forKey: didRunFirstLaunchSetupKey)
 
-        defaults.set(true, forKey: didRunFirstLaunchSetupKey)
-        defaults.set(true, forKey: autoUploadEnabledKey)
-        autoUploadEnabled = true
-        installShellIntegration()
-        configurePasteShortcutMonitor(promptForPermission: true)
+        if isFirstLaunch {
+            defaults.set(true, forKey: didRunFirstLaunchSetupKey)
+            defaults.set(true, forKey: autoUploadEnabledKey)
+            autoUploadEnabled = true
+        }
+
+        if isFirstLaunch || defaults.integer(forKey: shellIntegrationVersionKey) < currentShellIntegrationVersion {
+            let installed = installShellIntegration(updateStatus: false)
+            if !installed {
+                statusMessage = "SSH 集成安装失败"
+                lastError = "无法自动安装 SSH 集成。"
+            }
+        }
+
+        if isFirstLaunch {
+            configurePasteShortcutMonitor(promptForPermission: true)
+        }
     }
 
     private func configurePasteShortcutMonitor(promptForPermission: Bool) {

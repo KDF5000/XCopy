@@ -26,11 +26,13 @@ struct ShellIntegrationInstaller {
 
         let binDirectory = home.appendingPathComponent(".xcopy/bin", isDirectory: true)
         let sessionsDirectory = home.appendingPathComponent(".xcopy/sessions", isDirectory: true)
+        let ttySessionsDirectory = sessionsDirectory.appendingPathComponent("by-tty", isDirectory: true)
         let cliURL = binDirectory.appendingPathComponent("xcopy")
         let zshrcURL = home.appendingPathComponent(".zshrc")
 
         try FileManager.default.createDirectory(at: binDirectory, withIntermediateDirectories: true)
         try FileManager.default.createDirectory(at: sessionsDirectory, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: ttySessionsDirectory, withIntermediateDirectories: true)
         try cliScript.write(to: cliURL, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: cliURL.path)
 
@@ -107,6 +109,16 @@ struct ShellIntegrationInstaller {
           return 1
         }
 
+        xcopy_json_escape() {
+          local value="$1"
+          value="${value//\\\\/\\\\\\\\}"
+          value="${value//\\"/\\\\\\"}"
+          value="${value//$'\\n'/\\\\n}"
+          value="${value//$'\\r'/\\\\r}"
+          value="${value//$'\\t'/\\\\t}"
+          printf '%s' "$value"
+        }
+
         xcopy_ssh_wrapper() {
           local target
           target="$(xcopy_extract_ssh_target "$@" || true)"
@@ -117,29 +129,37 @@ struct ShellIntegrationInstaller {
 
           local root="$HOME/.xcopy"
           local sessions="$root/sessions"
+          local tty_sessions="$sessions/by-tty"
           local token
           token="$(uuidgen | tr '[:upper:]' '[:lower:]')"
 
-          mkdir -p "$sessions"
+          mkdir -p "$sessions" "$tty_sessions"
           printf '%s\\n' "$target" > "$sessions/$token"
+
+          local tty_path
+          tty_path="$(tty 2>/dev/null || true)"
+          local tty_id=""
+          local tty_session=""
+          if [ -n "$tty_path" ] && [ "$tty_path" != "not a tty" ]; then
+            tty_id="${tty_path#/dev/}"
+            tty_session="$tty_sessions/$tty_id.json"
+            printf '{\\n  "target": "%s",\\n  "tty": "%s",\\n  "pid": %s,\\n  "startedAt": %s\\n}\\n' \\
+              "$(xcopy_json_escape "$target")" \\
+              "$(xcopy_json_escape "$tty_path")" \\
+              "$$" \\
+              "$(date +%s)" > "$tty_session"
+          fi
 
           local title="xcopy:$token $target"
           printf '\\033]0;%s\\007' "$title"
-
-          (
-            while [ -f "$sessions/$token" ]; do
-              printf '\\033]0;%s\\007' "$title"
-              sleep 2
-            done
-          ) &
-          local title_pid=$!
 
           /usr/bin/ssh "$@"
           local code=$?
 
           rm -f "$sessions/$token"
-          kill "$title_pid" >/dev/null 2>&1 || true
-          wait "$title_pid" >/dev/null 2>&1 || true
+          if [ -n "$tty_session" ]; then
+            rm -f "$tty_session"
+          fi
           printf '\\033]0;%s\\007' "$target"
 
           return "$code"

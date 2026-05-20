@@ -126,6 +126,12 @@ final class GlobalPasteShortcutMonitor {
     }
 
     private func matchingHostIDForFocusedWindow() -> UUID? {
+        if let tty = focusedTerminalTTY(),
+           let target = sessionRegistry.target(forTTY: tty),
+           let hostID = matchingHostID(for: target) {
+            return hostID
+        }
+
         let text = focusedWindowSearchText()
         guard !text.isEmpty else { return nil }
 
@@ -191,6 +197,59 @@ final class GlobalPasteShortcutMonitor {
             .trimmingCharacters(in: CharacterSet(charactersIn: "()[]{}"))
 
         return target?.isEmpty == false ? target : nil
+    }
+
+    private func focusedTerminalTTY() -> String? {
+        guard let app = NSWorkspace.shared.frontmostApplication,
+              let bundleIdentifier = app.bundleIdentifier else {
+            return nil
+        }
+
+        switch bundleIdentifier {
+        case "com.apple.Terminal":
+            return runAppleScript("""
+            tell application id "com.apple.Terminal"
+              if not (exists front window) then return ""
+              return tty of selected tab of front window
+            end tell
+            """)
+        case "com.googlecode.iterm2":
+            return runAppleScript("""
+            tell application id "com.googlecode.iterm2"
+              if not (exists current window) then return ""
+              return tty of current session of current window
+            end tell
+            """)
+        default:
+            return nil
+        }
+    }
+
+    private func runAppleScript(_ script: String) -> String? {
+        let process = Process()
+        let pipe = Pipe()
+
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/osascript")
+        process.arguments = ["-e", script]
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        do {
+            try process.run()
+        } catch {
+            return nil
+        }
+
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else {
+            return nil
+        }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output = String(data: data, encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return output?.isEmpty == false ? output : nil
     }
 
     private func focusedWindowSearchText() -> String {
