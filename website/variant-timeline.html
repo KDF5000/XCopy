@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XCopy — 时间线风格</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --surface: #f5f5f7;
+      --surface-hover: #ebebed;
+      --border: #e2e2e4;
+      --text-primary: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #aeaeb2;
+      --accent: #0071e3;
+      --accent-light: #e8f1fb;
+      --accent-hover: #0077ed;
+      --green: #34c759;
+      --green-light: #e8f8ed;
+      --orange: #ff9500;
+      --orange-light: #fff4e5;
+      --purple: #5e5ce6;
+      --purple-light: #eeeefc;
+      --red: #ff3b30;
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-primary); text-decoration: none; }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { font-size: 14px; color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-download { background: var(--text-primary); color: #fff !important; padding: 7px 16px; border-radius: 20px; font-size: 13px !important; font-weight: 600 !important; transition: background 0.15s !important; }
+    .nav-download:hover { background: #333 !important; color: #fff !important; }
+
+    /* VARIANT SWITCHER */
+    .variant-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      position: sticky; top: 56px; z-index: 99;
+    }
+    .variant-bar span { font-size: 12px; color: var(--text-tertiary); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-right: 8px; }
+    .variant-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; text-decoration: none;
+      background: #fff; color: var(--text-secondary); border: 1px solid var(--border);
+      transition: all 0.15s;
+    }
+    .variant-link:hover { border-color: var(--accent); color: var(--accent); }
+    .variant-link.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    main { max-width: 820px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 80px 20px 60px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-light); color: var(--accent);
+      font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 0.3px;
+    }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+    .hero h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 20px; }
+    .hero h1 .highlight { color: var(--accent); }
+    .hero-sub { font-size: clamp(16px, 2.5vw, 20px); color: var(--text-secondary); max-width: 560px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff; font-size: 15px; font-weight: 600;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s; box-shadow: 0 2px 8px rgba(0,113,227,0.35);
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface); color: var(--text-primary); font-size: 15px; font-weight: 600;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none; transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: var(--surface-hover); }
+    .shortcut-demo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 32px; flex-wrap: wrap; }
+    .shortcut-demo span { font-size: 13px; color: var(--text-tertiary); }
+    .kbd {
+      display: inline-flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-bottom: 2px solid var(--border);
+      border-radius: 6px; padding: 3px 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--text-primary);
+    }
+
+    /* SECTION TITLES */
+    .section-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+
+    /* TIMELINE */
+    .timeline-section { margin-top: 64px; }
+    .timeline {
+      position: relative;
+      padding-left: 48px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute; left: 15px; top: 0; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 48px;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute; left: -48px; top: 6px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; z-index: 1;
+    }
+    .timeline-dot.step-dot {
+      background: var(--text-primary); color: #fff;
+      font-size: 13px; font-weight: 700;
+    }
+    .timeline-dot.icon-dot {
+      background: var(--surface); border: 2px solid var(--border);
+      font-size: 16px;
+    }
+    .timeline-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .timeline-content:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .timeline-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+      color: var(--text-tertiary); margin-bottom: 6px;
+    }
+    .timeline-title {
+      font-size: 20px; font-weight: 800; line-height: 1.2; letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .timeline-desc {
+      font-size: 14px; color: var(--text-secondary); line-height: 1.6;
+    }
+
+    /* HOW STEPS — full width dark card */
+    .how-card {
+      background: var(--text-primary); color: #fff;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      margin-top: 48px;
+    }
+    .how-card .section-title { color: rgba(255,255,255,0.4); }
+    .how-card .timeline-title { color: #fff; }
+    .how-card .timeline-desc { color: rgba(255,255,255,0.6); }
+    .how-steps-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 32px;
+    }
+    .how-step { display: flex; flex-direction: column; gap: 12px; }
+    .how-step-num {
+      width: 36px; height: 36px; background: rgba(255,255,255,0.12); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff;
+    }
+    .how-step-title { font-size: 16px; font-weight: 700; color: #fff; }
+    .how-step-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+    /* FEATURE DETAIL CARDS */
+    .feature-detail {
+      display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap;
+    }
+    .feature-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 8px 14px; font-size: 13px; font-weight: 600;
+    }
+    .feature-chip .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    .cmd-block {
+      background: var(--text-primary); border-radius: 10px; padding: 14px 16px; margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.8; color: rgba(255,255,255,0.85);
+    }
+    .cmd-var { color: #ffd60a; }
+    .cmd-cmd { color: #64d2ff; }
+
+    .ssh-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green); color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px; margin-top: 12px; letter-spacing: 0.5px;
+    }
+    .ssh-badge::before {
+      content: ''; width: 6px; height: 6px; background: rgba(255,255,255,0.7); border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .req-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .req-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-secondary); }
+    .req-item::before {
+      content: '✓'; font-size: 12px; font-weight: 700; color: var(--green);
+      width: 18px; height: 18px; background: var(--green-light); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    /* CTA */
+    .cta-section {
+      margin-top: 64px;
+      background: var(--accent); border-radius: var(--radius-lg);
+      padding: 48px; text-align: center;
+    }
+    .cta-section .timeline-title { color: #fff; font-size: 28px; }
+    .cta-section .timeline-desc { color: rgba(255,255,255,0.7); }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+    .cta-btn-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: var(--accent); font-size: 15px; font-weight: 700;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none; transition: opacity 0.15s;
+    }
+    .cta-btn-white:hover { opacity: 0.9; }
+    .cta-btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.15); color: #fff; font-size: 15px; font-weight: 600;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+      max-width: 1080px; margin: 0 auto;
+    }
+    .footer-brand { font-size: 15px; font-weight: 700; }
+    .footer-brand span { color: var(--accent); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
+    .footer-links a:hover { color: var(--text-primary); }
+    .footer-copy { font-size: 12px; color: var(--text-tertiary); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .how-steps-row { grid-template-columns: 1fr; }
+      nav { padding: 0 16px; }
+      .nav-links a:not(.nav-download) { display: none; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .timeline { padding-left: 40px; }
+      .timeline::before { left: 11px; }
+      .timeline-dot { left: -40px; width: 26px; height: 26px; font-size: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .timeline-content { transition: none; }
+      .ssh-badge::before { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-brand">X<span>Copy</span></a>
+  <div class="nav-links">
+    <a href="#how">使用方法</a>
+    <a href="#features">功能特性</a>
+    <a href="https://github.com/KDF5000/XCopy/releases" class="nav-download">下载 DMG</a>
+  </div>
+</nav>
+
+<div class="variant-bar">
+  <span>风格对比</span>
+  <a href="index.html" class="variant-link">便当盒</a>
+  <a href="variant-timeline.html" class="variant-link active">时间线</a>
+  <a href="variant-split.html" class="variant-link">左右分栏</a>
+  <a href="variant-minimal.html" class="variant-link">极简列表</a>
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">macOS 菜单栏应用</div>
+    <h1>截图秒传远端<br><span class="highlight">路径直入终端</span></h1>
+    <p class="hero-sub">用 AI 写代码时，截图后按一个快捷键，图片自动上传到 SSH 远端服务器，文件路径直接粘贴进终端。</p>
+    <div class="hero-ctas">
+      <a href="https://github.com/KDF5000/XCopy/releases" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v9M4 7l4 4 4-4M2 13h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        下载 XCopy
+      </a>
+      <a href="https://github.com/KDF5000/XCopy" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </div>
+    <div class="shortcut-demo">
+      <span>默认快捷键</span>
+      <kbd class="kbd">⌘</kbd>
+      <kbd class="kbd">⇧</kbd>
+      <kbd class="kbd">V</kbd>
+      <span>可自定义</span>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-card" id="how">
+    <div class="section-title">三步上手</div>
+    <div class="timeline-title" style="font-size:24px">它是怎么工作的</div>
+    <div class="timeline-desc">Shell 集成自动识别当前终端连接的远端主机，无需手动选择。</div>
+    <div class="how-steps-row">
+      <div class="how-step">
+        <div class="how-step-num">1</div>
+        <div class="how-step-title">截图到剪贴板</div>
+        <div class="how-step-desc">用 macOS 自带截图（⌘⇧4）或任意工具截图，图片保存到剪贴板。</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">2</div>
+        <div class="how-step-title">按下 ⌘⇧V</div>
+        <div class="how-step-desc">聚焦到 SSH 终端窗口，按下快捷键。XCopy 自动识别当前连接的远端主机。</div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">3</div>
+        <div class="how-step-title">路径已在终端</div>
+        <div class="how-step-desc">图片上传完成，远端路径自动粘贴进提示符。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE FEATURES -->
+  <section id="features" class="timeline-section">
+    <div class="section-title">功能特性</div>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-dot icon-dot">⌨️</div>
+        <div class="timeline-content">
+          <div class="timeline-label">全局快捷键</div>
+          <div class="timeline-title">一键触达，随处可用</div>
+          <div class="timeline-desc">无需切换应用，在任意终端窗口内按下快捷键即可触发上传。可在菜单栏面板中自定义为任意组合键。</div>
+          <div class="feature-detail">
+            <div class="feature-chip"><kbd class="kbd" style="font-size:11px">⌘</kbd></div>
+            <div class="feature-chip"><kbd class="kbd" style="font-size:11px">⇧</kbd></div>
+            <div class="feature-chip"><kbd class="kbd" style="font-size:11px">V</kbd></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot icon-dot">📌</div>
+        <div class="timeline-content">
+          <div class="timeline-label">系统集成</div>
+          <div class="timeline-title">常驻菜单栏，零打扰</div>
+          <div class="timeline-desc">不占 Dock，不抢焦点。始终在线，随时待命。</div>
+          <div class="feature-detail">
+            <div class="feature-chip" style="background:var(--text-primary);color:rgba(255,255,255,0.8);border-color:transparent;font-family:'JetBrains Mono',monospace;font-size:12px">
+              <span style="color:#ff5f57">●</span>
+              <span style="color:#febc2e">●</span>
+              <span style="color:#28c840">●</span>
+              &nbsp;XCopy ▾
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot icon-dot" style="border-color:var(--green)">🔍</div>
+        <div class="timeline-content" style="background:var(--green-light);border-color:rgba(52,199,89,0.2)">
+          <div class="timeline-label">智能识别</div>
+          <div class="timeline-title">自动匹配 SSH 主机</div>
+          <div class="timeline-desc">Shell 集成在你打开 SSH 连接时，自动将终端窗口与对应的远端主机绑定。</div>
+          <div class="ssh-badge">已连接远端</div>
+          <div class="feature-detail" style="margin-top:16px">
+            <div class="feature-chip">🔍 多主机同时在线</div>
+            <div class="feature-chip">⚡ 无需手动选择</div>
+            <div class="feature-chip">🛠 按主机单独配置</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot icon-dot" style="border-color:var(--orange)">📤</div>
+        <div class="timeline-content" style="background:var(--orange-light);border-color:rgba(255,149,0,0.2)">
+          <div class="timeline-label">传输方式</div>
+          <div class="timeline-title">内置 scp 和 rsync</div>
+          <div class="timeline-desc">也支持完全自定义命令，适配任何传输场景。</div>
+          <div class="feature-detail">
+            <div class="feature-chip"><span class="dot" style="background:var(--orange)"></span> scp — 开箱即用</div>
+            <div class="feature-chip"><span class="dot" style="background:var(--orange)"></span> rsync — 增量同步</div>
+            <div class="feature-chip"><span class="dot" style="background:#888"></span> custom — 任意模板</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot icon-dot" style="border-color:var(--purple)">⚙️</div>
+        <div class="timeline-content" style="background:var(--purple-light);border-color:rgba(94,92,230,0.2)">
+          <div class="timeline-label">高级定制</div>
+          <div class="timeline-title">自定义命令模板</div>
+          <div class="timeline-desc">使用占位符变量，构建任意传输逻辑。</div>
+          <div class="cmd-block">
+            <span class="cmd-cmd">rsync</span> -avz --progress \<br>
+            &nbsp;&nbsp;<span class="cmd-var">{local}</span> \<br>
+            &nbsp;&nbsp;<span class="cmd-var">{user}</span>@<span class="cmd-var">{host}</span>:<span class="cmd-var">{directory}</span>/<span class="cmd-var">{fileName}</span>
+          </div>
+          <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px">
+            <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{local}</span>
+            <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{host}</span>
+            <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{user}</span>
+            <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{directory}</span>
+            <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{fileName}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot icon-dot">🎯</div>
+        <div class="timeline-content">
+          <div class="timeline-label">使用场景</div>
+          <div class="timeline-title">为远程开发者而生</div>
+          <div class="feature-detail" style="flex-direction:column;gap:10px">
+            <div class="feature-chip" style="width:100%;justify-content:flex-start">🤖 AI 辅助编程 — 截图直接传到远端服务器</div>
+            <div class="feature-chip" style="width:100%;justify-content:flex-start">🐛 远程调试 — 报错截图一按即传</div>
+            <div class="feature-chip" style="width:100%;justify-content:flex-start">📝 远程写文档 — 截图后直接得到远端路径</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot icon-dot">💻</div>
+        <div class="timeline-content">
+          <div class="timeline-label">系统要求</div>
+          <div class="timeline-title">开箱即用</div>
+          <div class="req-list">
+            <div class="req-item">macOS 14 Sonoma 及以上</div>
+            <div class="req-item">已配置 SSH 密钥访问</div>
+            <div class="req-item">Accessibility 辅助功能权限</div>
+            <div class="req-item">首次启动自动写入 Shell 集成</div>
+            <div class="req-item">无需 Root 权限</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="timeline-title">下载 XCopy</div>
+    <div class="timeline-desc">免费开源，GitHub Releases 下载最新版 DMG。</div>
+    <div class="cta-btns">
+      <a href="https://github.com/KDF5000/XCopy/releases" class="cta-btn-white">下载最新版</a>
+      <a href="https://github.com/KDF5000/XCopy" class="cta-btn-ghost">查看源码</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-brand">X<span>Copy</span></div>
+  <div class="footer-links">
+    <a href="https://github.com/KDF5000/XCopy">GitHub</a>
+    <a href="https://github.com/KDF5000/XCopy/releases">下载</a>
+    <a href="https://github.com/KDF5000/XCopy/issues">反馈</a>
+  </div>
+  <div class="footer-copy">macOS Only · 开源免费</div>
+</footer>
+
+</body>
+</html>
