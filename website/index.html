@@ -33,62 +33,34 @@
       --radius-lg: 24px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
       --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
-      --shadow-lg: 0 8px 24px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text-primary);
-      line-height: 1.6;
+      background: var(--bg); color: var(--text-primary); line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
     /* NAV */
     nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 0 24px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .nav-brand {
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: var(--text-primary);
-      text-decoration: none;
-    }
+    .nav-brand { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-primary); text-decoration: none; }
     .nav-brand span { color: var(--accent); }
     .nav-links { display: flex; gap: 24px; align-items: center; }
-    .nav-links a {
-      font-size: 14px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.15s;
-    }
+    .nav-links a { font-size: 14px; color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text-primary); }
-    .nav-download {
-      background: var(--text-primary);
-      color: #fff !important;
-      padding: 7px 16px;
-      border-radius: 20px;
-      font-size: 13px !important;
-      font-weight: 600 !important;
-      transition: background 0.15s !important;
-    }
+    .nav-download { background: var(--text-primary); color: #fff !important; padding: 7px 16px; border-radius: 20px; font-size: 13px !important; font-weight: 600 !important; }
     .nav-download:hover { background: #333 !important; color: #fff !important; }
 
+    /* VARIANT SWITCHER */
     .variant-bar {
       background: var(--surface); border-bottom: 1px solid var(--border);
       padding: 10px 24px; display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -104,550 +76,195 @@
     .variant-link:hover { border-color: var(--accent); color: var(--accent); }
     .variant-link.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    /* MAIN LAYOUT */
-    main {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
-    }
+    main { max-width: 1080px; margin: 0 auto; padding: 0 20px 80px; }
 
     /* HERO */
-    .hero {
-      text-align: center;
-      padding: 80px 20px 60px;
-    }
+    .hero { text-align: center; padding: 80px 20px 60px; }
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--accent-light);
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 20px;
-      margin-bottom: 24px;
-      letter-spacing: 0.3px;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-light); color: var(--accent);
+      font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 0.3px;
     }
-    .hero-badge::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: var(--accent);
-      border-radius: 50%;
-    }
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 64px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -2px;
-      color: var(--text-primary);
-      margin-bottom: 20px;
-    }
-    .hero h1 .highlight {
-      color: var(--accent);
-    }
-    .hero-sub {
-      font-size: clamp(16px, 2.5vw, 20px);
-      color: var(--text-secondary);
-      max-width: 560px;
-      margin: 0 auto 36px;
-      line-height: 1.6;
-      font-weight: 400;
-    }
-    .hero-ctas {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+    .hero h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.1; letter-spacing: -2px; margin-bottom: 20px; }
+    .hero h1 .highlight { color: var(--accent); }
+    .hero-sub { font-size: clamp(16px, 2.5vw, 20px); color: var(--text-secondary); max-width: 560px; margin: 0 auto 36px; line-height: 1.6; }
+    .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--accent);
-      color: #fff;
-      font-size: 15px;
-      font-weight: 600;
-      padding: 12px 24px;
-      border-radius: 24px;
-      text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-      box-shadow: 0 2px 8px rgba(0,113,227,0.35);
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff; font-size: 15px; font-weight: 600;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none;
+      transition: background 0.15s, transform 0.1s; box-shadow: 0 2px 8px rgba(0,113,227,0.35);
     }
     .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
     .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface);
-      color: var(--text-primary);
-      font-size: 15px;
-      font-weight: 600;
-      padding: 12px 24px;
-      border-radius: 24px;
-      text-decoration: none;
-      transition: background 0.15s;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface); color: var(--text-primary); font-size: 15px; font-weight: 600;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none; transition: background 0.15s;
     }
     .btn-secondary:hover { background: var(--surface-hover); }
-
-    /* SHORTCUT DEMO */
-    .shortcut-demo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 32px;
-      flex-wrap: wrap;
-    }
-    .shortcut-demo span {
-      font-size: 13px;
-      color: var(--text-tertiary);
-    }
+    .shortcut-demo { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 32px; flex-wrap: wrap; }
+    .shortcut-demo span { font-size: 13px; color: var(--text-tertiary); }
     .kbd {
-      display: inline-flex;
-      align-items: center;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-bottom: 2px solid var(--border);
-      border-radius: 6px;
-      padding: 3px 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-primary);
-      box-shadow: var(--shadow-sm);
+      display: inline-flex; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-bottom: 2px solid var(--border);
+      border-radius: 6px; padding: 3px 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--text-primary);
     }
 
-    /* BENTO GRID */
-    .bento {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-areas:
-        "how    how    how    how"
-        "short  short  menu   stat1"
-        "ssh    ssh    trans  trans"
-        "cmd    cmd    cases  cases"
-        "req    macos  cta    cta";
-      gap: 16px;
-      margin-top: 8px;
+    /* SPLIT SECTIONS */
+    .split-section { margin-top: 64px; }
+    .section-label {
+      font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
     }
 
-    .card {
-      background: var(--surface);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      border: 1px solid var(--border);
-      transition: transform 0.2s, box-shadow 0.2s;
-      overflow: hidden;
-      position: relative;
+    .split-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+      padding: 48px 0;
+      border-bottom: 1px solid var(--border);
     }
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+    .split-row:last-child { border-bottom: none; }
+
+    .split-text {}
+    .split-label {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+      color: var(--text-tertiary); margin-bottom: 8px;
+    }
+    .split-title {
+      font-size: 28px; font-weight: 800; line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 12px;
+    }
+    .split-desc {
+      font-size: 15px; color: var(--text-secondary); line-height: 1.7;
     }
 
-    /* Card grid placement */
-    .card-how    { grid-area: how; }
-    .card-shortcut { grid-area: short; }
-    .card-menubar { grid-area: menu; }
-    .card-ssh    { grid-area: ssh; }
-    .card-transfer { grid-area: trans; }
-    .card-cmd    { grid-area: cmd; }
-    .card-cases  { grid-area: cases; }
-    .card-req    { grid-area: req; }
-    .card-macos  { grid-area: macos; }
-    .card-cta    { grid-area: cta; }
-    .card-stat1  { grid-area: stat1; }
-
-    /* HOW IT WORKS — full width */
-    .card-how {
-      background: var(--text-primary);
-      color: #fff;
-    }
-    .card-how .card-title { color: #fff; }
-    .card-how .card-sub { color: rgba(255,255,255,0.6); }
-
-    .how-steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 32px;
-    }
-    .step {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .step-num {
-      width: 32px; height: 32px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
-      flex-shrink: 0;
-    }
-    .step-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.3;
-    }
-    .step-desc {
-      font-size: 14px;
-      color: rgba(255,255,255,0.6);
-      line-height: 1.6;
-    }
-    .step-arrow {
-      color: rgba(255,255,255,0.25);
-      font-size: 20px;
-      align-self: center;
-      margin-top: 8px;
+    .split-visual {
+      display: flex; align-items: center; justify-content: center;
     }
 
-    /* Card: Shortcut hero */
-    .card-shortcut {
-      background: linear-gradient(135deg, var(--accent-light) 0%, #fff 100%);
-      border-color: rgba(0,113,227,0.15);
+    /* Visual cards */
+    .visual-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 28px;
+      width: 100%; transition: transform 0.2s, box-shadow 0.2s;
     }
+    .visual-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
     .shortcut-keys {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin: 20px 0;
-      flex-wrap: wrap;
+      display: flex; gap: 8px; align-items: center; margin: 20px 0; flex-wrap: wrap;
     }
     .key-chip {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-bottom: 3px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 18px;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-primary);
-      box-shadow: var(--shadow-sm);
+      background: #fff; border: 1px solid var(--border); border-bottom: 3px solid var(--border);
+      border-radius: 10px; padding: 8px 14px;
+      font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+      color: var(--text-primary); box-shadow: var(--shadow-sm);
     }
-    .key-plus {
-      font-size: 16px;
-      color: var(--text-tertiary);
-      font-weight: 600;
-    }
+    .key-plus { font-size: 16px; color: var(--text-tertiary); font-weight: 600; }
 
-    /* Card: menu bar */
-    .card-menubar {
-      background: #fff;
-    }
     .menubar-mock {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--text-primary);
-      border-radius: 10px;
-      padding: 8px 14px;
-      margin-top: 20px;
-      width: fit-content;
+      display: flex; align-items: center; gap: 6px;
+      background: var(--text-primary); border-radius: 10px; padding: 8px 14px; margin-top: 20px; width: fit-content;
     }
     .menubar-mock .dot { width: 10px; height: 10px; border-radius: 50%; }
     .menubar-mock .dot-r { background: var(--red); }
     .menubar-mock .dot-y { background: var(--orange); }
     .menubar-mock .dot-g { background: var(--green); }
-    .menubar-mock .icon-label {
-      font-size: 12px;
-      color: rgba(255,255,255,0.8);
-      font-family: 'JetBrains Mono', monospace;
-      margin-left: 8px;
-    }
+    .menubar-mock .icon-label { font-size: 12px; color: rgba(255,255,255,0.8); font-family: 'JetBrains Mono', monospace; margin-left: 8px; }
 
-    /* Card: SSH auto-detect */
-    .card-ssh {
-      background: var(--green-light);
-      border-color: rgba(52,199,89,0.2);
-    }
     .ssh-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--green);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 20px;
-      margin-top: 12px;
-      letter-spacing: 0.5px;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green); color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px; margin-top: 12px; letter-spacing: 0.5px;
     }
     .ssh-badge::before {
-      content: '';
-      width: 6px; height: 6px;
-      background: rgba(255,255,255,0.7);
-      border-radius: 50%;
+      content: ''; width: 6px; height: 6px; background: rgba(255,255,255,0.7); border-radius: 50%;
       animation: pulse 1.5s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-    /* Card: transfer modes */
-    .card-transfer {
-      background: var(--orange-light);
-      border-color: rgba(255,149,0,0.2);
-    }
-    .transfer-modes {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 16px;
-    }
+    .transfer-modes { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
     .transfer-mode {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #fff;
-      border-radius: 10px;
-      padding: 10px 14px;
-      border: 1px solid rgba(255,149,0,0.15);
+      display: flex; align-items: center; gap: 10px;
+      background: #fff; border-radius: 10px; padding: 10px 14px; border: 1px solid rgba(255,149,0,0.15);
     }
-    .mode-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--orange);
-      flex-shrink: 0;
-    }
-    .mode-name {
-      font-size: 13px;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-primary);
-    }
-    .mode-desc {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-left: auto;
-    }
+    .mode-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+    .mode-name { font-size: 13px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .mode-desc { font-size: 12px; color: var(--text-secondary); margin-left: auto; }
 
-    /* Card: custom command */
-    .card-cmd {
-      background: var(--purple-light);
-      border-color: rgba(94,92,230,0.2);
-    }
     .cmd-block {
-      background: var(--text-primary);
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-top: 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11.5px;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.85);
-      overflow-x: auto;
+      background: var(--text-primary); border-radius: 10px; padding: 14px 16px; margin-top: 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.8; color: rgba(255,255,255,0.85);
     }
     .cmd-var { color: #ffd60a; }
     .cmd-cmd { color: #64d2ff; }
 
-    /* Card: use cases */
-    .use-cases {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 16px;
-    }
-    .use-case {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px 16px;
-      background: #fff;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-    .use-case-icon {
-      font-size: 22px;
-      flex-shrink: 0;
-      line-height: 1;
-    }
-    .use-case-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .use-case-desc {
-      font-size: 13px;
-      color: var(--text-secondary);
-      margin-top: 2px;
-      line-height: 1.5;
-    }
-
-    /* Card: requirements */
-    .card-req {
-      background: #fff;
-    }
-    .req-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 16px;
-    }
-    .req-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--text-secondary);
-    }
+    .req-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .req-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-secondary); }
     .req-item::before {
-      content: '✓';
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--green);
-      width: 18px; height: 18px;
-      background: var(--green-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      content: '✓'; font-size: 12px; font-weight: 700; color: var(--green);
+      width: 18px; height: 18px; background: var(--green-light); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
 
-    /* Card: stat tiles */
-    .stat {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-    .stat-num {
-      font-size: 48px;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -2px;
-      color: var(--text-primary);
-      margin-top: 16px;
-    }
-    .stat-num .unit {
-      font-size: 28px;
-      letter-spacing: -1px;
-    }
-    .stat-label {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-top: 8px;
-    }
+    /* REVERSE ROW */
+    .split-row.reverse .split-text { order: 2; }
+    .split-row.reverse .split-visual { order: 1; }
 
-    /* CARD TITLES */
-    .card-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-      margin-bottom: 8px;
+    /* CTA */
+    .cta-section {
+      margin-top: 64px;
+      background: var(--accent); border-radius: var(--radius-lg);
+      padding: 48px; text-align: center;
     }
-    .card-title {
-      font-size: 20px;
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.5px;
-      color: var(--text-primary);
+    .cta-title { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+    .cta-desc { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 8px; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+    .cta-btn-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: var(--accent); font-size: 15px; font-weight: 700;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none; transition: opacity 0.15s;
     }
-    .card-sub {
-      font-size: 14px;
-      color: var(--text-secondary);
-      margin-top: 6px;
-      line-height: 1.6;
+    .cta-btn-white:hover { opacity: 0.9; }
+    .cta-btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.15); color: #fff; font-size: 15px; font-weight: 600;
+      padding: 12px 24px; border-radius: 24px; text-decoration: none;
     }
 
     /* FOOTER */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-      max-width: 1080px;
-      margin: 0 auto;
+      border-top: 1px solid var(--border); padding: 32px 24px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+      max-width: 1080px; margin: 0 auto;
     }
-    .footer-brand {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
+    .footer-brand { font-size: 15px; font-weight: 700; }
     .footer-brand span { color: var(--accent); }
-    .footer-links {
-      display: flex;
-      gap: 20px;
-    }
-    .footer-links a {
-      font-size: 13px;
-      color: var(--text-secondary);
-      text-decoration: none;
-    }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
     .footer-links a:hover { color: var(--text-primary); }
-    .footer-copy {
-      font-size: 12px;
-      color: var(--text-tertiary);
-    }
+    .footer-copy { font-size: 12px; color: var(--text-tertiary); }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
-      .bento {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "how"
-          "short"
-          "menu"
-          "stat1"
-          "ssh"
-          "trans"
-          "cmd"
-          "cases"
-          "req"
-          "macos"
-          "cta";
-      }
-      .how-steps { grid-template-columns: 1fr; }
-      .step-arrow { display: none; }
+      .split-row { grid-template-columns: 1fr; gap: 24px; }
+      .split-row.reverse .split-text { order: 1; }
+      .split-row.reverse .split-visual { order: 2; }
       nav { padding: 0 16px; }
       .nav-links a:not(.nav-download) { display: none; }
       footer { flex-direction: column; align-items: flex-start; }
     }
 
-    @media (max-width: 1024px) and (min-width: 769px) {
-      .bento {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-areas:
-          "how    how"
-          "short  short"
-          "menu   stat1"
-          "ssh    ssh"
-          "trans  trans"
-          "cmd    cmd"
-          "cases  cases"
-          "req    macos"
-          "cta    cta";
-      }
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      .card { transition: none; }
-      .btn-primary { transition: none; }
+      .visual-card { transition: none; }
       .ssh-badge::before { animation: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="#" class="nav-brand">X<span>Copy</span></a>
   <div class="nav-links">
-    <a href="#how">使用方法</a>
     <a href="#features">功能特性</a>
     <a href="https://github.com/KDF5000/XCopy/releases" class="nav-download">下载 DMG</a>
   </div>
@@ -655,9 +272,9 @@
 
 <div class="variant-bar">
   <span>风格对比</span>
-  <a href="index.html" class="variant-link active">便当盒</a>
+  <a href="variant-bento.html" class="variant-link">便当盒</a>
   <a href="variant-timeline.html" class="variant-link">时间线</a>
-  <a href="variant-split.html" class="variant-link">左右分栏</a>
+  <a href="variant-split.html" class="variant-link active">左右分栏</a>
   <a href="variant-minimal.html" class="variant-link">极简列表</a>
 </div>
 
@@ -687,218 +304,141 @@
     </div>
   </section>
 
-  <!-- BENTO GRID -->
-  <section id="features">
-    <div class="bento">
+  <section id="features" class="split-section">
 
-      <!-- HOW IT WORKS — full width -->
-      <div class="card card-how" id="how">
-        <div class="card-label" style="color:rgba(255,255,255,0.4)">三步上手</div>
-        <div class="card-title">它是怎么工作的</div>
-        <div class="card-sub">Shell 集成自动识别当前终端连接的远端主机，无需手动选择。</div>
-        <div class="how-steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-title">截图到剪贴板</div>
-            <div class="step-desc">用 macOS 自带截图（⌘⇧4）或任意工具截图，图片保存到剪贴板。</div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-title">按下 ⌘⇧V</div>
-            <div class="step-desc">聚焦到 SSH 终端窗口，按下快捷键。XCopy 自动识别当前连接的远端主机。</div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-title">路径已在终端</div>
-            <div class="step-desc">图片上传完成，远端路径（如 <code style="font-family:JetBrains Mono,monospace;font-size:11px;opacity:0.7">/data/tmp/xcopy-20260524.png</code>）自动粘贴进提示符。</div>
+    <!-- Shortcut -->
+    <div class="split-row">
+      <div class="split-text">
+        <div class="split-label">全局快捷键</div>
+        <div class="split-title">一键触达<br>随处可用</div>
+        <div class="split-desc">无需切换应用，在任意终端窗口内按下快捷键即可触发上传。可在菜单栏面板中自定义为任意组合键。</div>
+      </div>
+      <div class="split-visual">
+        <div class="visual-card" style="background:linear-gradient(135deg, var(--accent-light) 0%, #fff 100%); border-color:rgba(0,113,227,0.15)">
+          <div class="shortcut-keys">
+            <div class="key-chip">⌘</div>
+            <div class="key-plus">+</div>
+            <div class="key-chip">⇧</div>
+            <div class="key-plus">+</div>
+            <div class="key-chip">V</div>
           </div>
         </div>
       </div>
-
-      <!-- SHORTCUT — wide -->
-      <div class="card card-shortcut">
-        <div class="card-label">全局快捷键</div>
-        <div class="card-title">一键触达，随处可用</div>
-        <div class="card-sub">无需切换应用，在任意终端窗口内按下快捷键即可触发上传。</div>
-        <div class="shortcut-keys">
-          <div class="key-chip">⌘</div>
-          <div class="key-plus">+</div>
-          <div class="key-chip">⇧</div>
-          <div class="key-plus">+</div>
-          <div class="key-chip">V</div>
-        </div>
-        <div style="font-size:13px;color:var(--text-secondary)">可在菜单栏面板中自定义为任意组合键</div>
-      </div>
-
-      <!-- MENU BAR -->
-      <div class="card card-menubar">
-        <div class="card-label">系统集成</div>
-        <div class="card-title">常驻菜单栏<br>零打扰</div>
-        <div class="card-sub">不占 Dock，不抢焦点。始终在线，随时待命。</div>
-        <div class="menubar-mock">
-          <div class="dot dot-r"></div>
-          <div class="dot dot-y"></div>
-          <div class="dot dot-g"></div>
-          <span class="icon-label">XCopy ▾</span>
-        </div>
-      </div>
-
-      <!-- SSH AUTO DETECT -->
-      <div class="card card-ssh">
-        <div class="card-label">智能识别</div>
-        <div class="card-title">自动匹配 SSH 主机</div>
-        <div class="card-sub">Shell 集成（~/.zshrc）在你打开 SSH 连接时，自动将终端窗口与对应的远端主机绑定。</div>
-        <div class="ssh-badge">已连接远端</div>
-        <div class="use-cases" style="margin-top:20px">
-          <div class="use-case" style="background:rgba(255,255,255,0.7)">
-            <div class="use-case-icon">🔍</div>
-            <div>
-              <div class="use-case-title">多主机同时在线</div>
-              <div class="use-case-desc">每个终端窗口独立追踪，上传到正确的主机。</div>
-            </div>
-          </div>
-          <div class="use-case" style="background:rgba(255,255,255,0.7)">
-            <div class="use-case-icon">⚡</div>
-            <div>
-              <div class="use-case-title">无需手动选择</div>
-              <div class="use-case-desc">聚焦哪个窗口就传到哪台机器，完全自动。</div>
-            </div>
-          </div>
-          <div class="use-case" style="background:rgba(255,255,255,0.7)">
-            <div class="use-case-icon">🛠</div>
-            <div>
-              <div class="use-case-title">按主机单独配置</div>
-              <div class="use-case-desc">每台远端主机可设置不同的上传目录和传输方式。</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TRANSFER MODES -->
-      <div class="card card-transfer">
-        <div class="card-label">传输方式</div>
-        <div class="card-title">内置 scp 和 rsync</div>
-        <div class="card-sub">也支持完全自定义命令，适配任何传输场景。</div>
-        <div class="transfer-modes">
-          <div class="transfer-mode">
-            <div class="mode-dot"></div>
-            <div class="mode-name">scp</div>
-            <div class="mode-desc">简单直接，开箱即用</div>
-          </div>
-          <div class="transfer-mode">
-            <div class="mode-dot"></div>
-            <div class="mode-name">rsync</div>
-            <div class="mode-desc">增量同步，支持断点续传</div>
-          </div>
-          <div class="transfer-mode">
-            <div class="mode-dot" style="background:#888"></div>
-            <div class="mode-name">custom</div>
-            <div class="mode-desc">任意命令模板</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- STAT: one shortcut -->
-      <div class="card stat card-stat1">
-        <div class="card-label">效率提升</div>
-        <div class="stat-num">1<span class="unit"> 键</span></div>
-        <div class="stat-label">替代手动 scp + 复制路径的全流程</div>
-      </div>
-
-      <!-- CUSTOM COMMAND -->
-      <div class="card card-cmd">
-        <div class="card-label">高级定制</div>
-        <div class="card-title">自定义命令模板</div>
-        <div class="card-sub">使用占位符变量，构建任意传输逻辑。</div>
-        <div class="cmd-block">
-          <span class="cmd-cmd">rsync</span> -avz --progress \<br>
-          &nbsp;&nbsp;<span class="cmd-var">{local}</span> \<br>
-          &nbsp;&nbsp;<span class="cmd-var">{user}</span>@<span class="cmd-var">{host}</span>:<span class="cmd-var">{directory}</span>/<span class="cmd-var">{fileName}</span>
-        </div>
-        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px">
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{local}</span>
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{remote}</span>
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{host}</span>
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{user}</span>
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{port}</span>
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{directory}</span>
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{fileName}</span>
-          <span style="background:rgba(94,92,230,0.1);color:var(--purple);font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace">{connection}</span>
-        </div>
-      </div>
-
-      <!-- USE CASES -->
-      <div class="card card-cases">
-        <div class="card-label">使用场景</div>
-        <div class="card-title">为远程开发者而生</div>
-        <div class="use-cases" style="margin-top:20px">
-          <div class="use-case">
-            <div class="use-case-icon">🤖</div>
-            <div>
-              <div class="use-case-title">AI 辅助编程</div>
-              <div class="use-case-desc">用 Cursor、Claude 等工具在远端服务器上写代码时，截图直接传过去。</div>
-            </div>
-          </div>
-          <div class="use-case">
-            <div class="use-case-icon">🐛</div>
-            <div>
-              <div class="use-case-title">远程调试</div>
-              <div class="use-case-desc">截下报错截图，快捷键一按，路径就在命令行里。</div>
-            </div>
-          </div>
-          <div class="use-case">
-            <div class="use-case-icon">📝</div>
-            <div>
-              <div class="use-case-title">远程写文档</div>
-              <div class="use-case-desc">截图后直接得到远端路径，插入 Markdown 或任何文档格式。</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- REQUIREMENTS -->
-      <div class="card card-req">
-        <div class="card-label">系统要求</div>
-        <div class="card-title">开箱即用</div>
-        <div class="req-list">
-          <div class="req-item">macOS 14 Sonoma 及以上</div>
-          <div class="req-item">已配置 SSH 密钥访问</div>
-          <div class="req-item">Accessibility 辅助功能权限</div>
-          <div class="req-item">首次启动自动写入 Shell 集成</div>
-          <div class="req-item">无需 Root 权限</div>
-        </div>
-      </div>
-
-      <!-- STAT: macOS 14+ -->
-      <div class="card stat card-macos" style="background:var(--surface)">
-        <div class="card-label">支持平台</div>
-        <div class="stat-num" style="font-size:36px;letter-spacing:-1px">macOS<br>14+</div>
-        <div class="stat-label">Signed & Notarized DMG，安装即用</div>
-      </div>
-
-      <!-- CTA CARD -->
-      <div class="card card-cta" style="background:var(--accent);border-color:var(--accent)">
-        <div class="card-label" style="color:rgba(255,255,255,0.5)">立即体验</div>
-        <div class="card-title" style="color:#fff">下载 XCopy</div>
-        <div class="card-sub" style="color:rgba(255,255,255,0.7)">免费开源，GitHub Releases 下载最新版 DMG。</div>
-        <div style="margin-top:24px;display:flex;flex-direction:column;gap:10px">
-          <a href="https://github.com/KDF5000/XCopy/releases"
-             style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:var(--accent);font-size:14px;font-weight:700;padding:12px 20px;border-radius:20px;text-decoration:none;transition:opacity 0.15s">
-            下载最新版
-          </a>
-          <a href="https://github.com/KDF5000/XCopy"
-             style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,0.15);color:#fff;font-size:14px;font-weight:600;padding:10px 20px;border-radius:20px;text-decoration:none">
-            查看源码
-          </a>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Menu Bar -->
+    <div class="split-row reverse">
+      <div class="split-text">
+        <div class="split-label">系统集成</div>
+        <div class="split-title">常驻菜单栏<br>零打扰</div>
+        <div class="split-desc">不占 Dock，不抢焦点。始终在线，随时待命。</div>
+      </div>
+      <div class="split-visual">
+        <div class="visual-card" style="background:#fff">
+          <div class="menubar-mock">
+            <div class="dot dot-r"></div>
+            <div class="dot dot-y"></div>
+            <div class="dot dot-g"></div>
+            <span class="icon-label">XCopy ▾</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SSH -->
+    <div class="split-row">
+      <div class="split-text">
+        <div class="split-label">智能识别</div>
+        <div class="split-title">自动匹配<br>SSH 主机</div>
+        <div class="split-desc">Shell 集成在你打开 SSH 连接时，自动将终端窗口与对应的远端主机绑定。每个终端窗口独立追踪，上传到正确的主机。</div>
+      </div>
+      <div class="split-visual">
+        <div class="visual-card" style="background:var(--green-light);border-color:rgba(52,199,89,0.2)">
+          <div class="ssh-badge">已连接远端</div>
+          <div style="margin-top:20px;font-size:14px;color:var(--text-secondary);line-height:1.7">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="color:var(--green);font-weight:700">✓</span> 多主机同时在线，每个窗口独立追踪
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="color:var(--green);font-weight:700">✓</span> 聚焦哪个窗口就传到哪台机器
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="color:var(--green);font-weight:700">✓</span> 不同主机可单独配置上传目录
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transfer + Custom Command -->
+    <div class="split-row reverse">
+      <div class="split-text">
+        <div class="split-label">灵活传输</div>
+        <div class="split-title">内置 scp / rsync<br>也支持自定义命令</div>
+        <div class="split-desc">开箱即用 scp，需要增量同步切 rsync，特殊场景用占位符变量构建任意命令模板。</div>
+      </div>
+      <div class="split-visual">
+        <div class="visual-card" style="background:var(--orange-light);border-color:rgba(255,149,0,0.2)">
+          <div class="transfer-modes">
+            <div class="transfer-mode">
+              <div class="mode-dot"></div>
+              <div class="mode-name">scp</div>
+              <div class="mode-desc">简单直接，开箱即用</div>
+            </div>
+            <div class="transfer-mode">
+              <div class="mode-dot"></div>
+              <div class="mode-name">rsync</div>
+              <div class="mode-desc">增量同步，支持断点续传</div>
+            </div>
+            <div class="transfer-mode">
+              <div class="mode-dot" style="background:#888"></div>
+              <div class="mode-name">custom</div>
+              <div class="mode-desc">任意命令模板</div>
+            </div>
+          </div>
+          <div class="cmd-block" style="margin-top:12px">
+            <span class="cmd-cmd">rsync</span> -avz --progress \<br>
+            &nbsp;&nbsp;<span class="cmd-var">{local}</span> \<br>
+            &nbsp;&nbsp;<span class="cmd-var">{user}</span>@<span class="cmd-var">{host}</span>:<span class="cmd-var">{directory}</span>/<span class="cmd-var">{fileName}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requirements -->
+    <div class="split-row">
+      <div class="split-text">
+        <div class="split-label">系统要求</div>
+        <div class="split-title">开箱即用</div>
+        <div class="split-desc">macOS 14 及以上，已配置 SSH 密钥访问。首次启动自动写入 Shell 集成，无需 Root 权限。</div>
+      </div>
+      <div class="split-visual">
+        <div class="visual-card" style="background:#fff">
+          <div class="req-list">
+            <div class="req-item">macOS 14 Sonoma 及以上</div>
+            <div class="req-item">已配置 SSH 密钥访问</div>
+            <div class="req-item">Accessibility 辅助功能权限</div>
+            <div class="req-item">首次启动自动写入 Shell 集成</div>
+            <div class="req-item">无需 Root 权限</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-title">下载 XCopy</div>
+    <div class="cta-desc">免费开源，GitHub Releases 下载最新版 DMG。</div>
+    <div class="cta-btns">
+      <a href="https://github.com/KDF5000/XCopy/releases" class="cta-btn-white">下载最新版</a>
+      <a href="https://github.com/KDF5000/XCopy" class="cta-btn-ghost">查看源码</a>
+    </div>
+  </div>
 
 </main>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-brand">X<span>Copy</span></div>
   <div class="footer-links">
