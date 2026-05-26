@@ -52,9 +52,9 @@
       padding: 0 24px; height: 56px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .nav-brand { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-primary); text-decoration: none; }
+    .nav-brand { display: flex; align-items: center; gap: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-primary); text-decoration: none; }
     .nav-brand span { color: var(--accent); }
-    .nav-logo { width: 28px; height: 28px; flex-shrink: 0; }
+    .nav-logo { width: 28px; height: 28px; flex-shrink: 0; margin-right: 8px; }
     .nav-links { display: flex; gap: 24px; align-items: center; }
     .nav-links a { font-size: 14px; color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text-primary); }
@@ -64,7 +64,7 @@
     main { max-width: 1080px; margin: 0 auto; padding: 0 20px 80px; }
 
     /* HERO */
-    .hero-logo { width: 96px; height: 96px; margin: 0 auto 24px; }
+    .hero-logo { width: 96px; height: 96px; margin: 0 auto 24px; display: block; }
     .hero { text-align: center; padding: 80px 20px 60px; }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 6px;
@@ -223,9 +223,9 @@
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
       max-width: 1080px; margin: 0 auto;
     }
-    .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; }
+    .footer-brand { display: flex; align-items: center; gap: 0; font-size: 15px; font-weight: 700; }
     .footer-brand span { color: var(--accent); }
-    .footer-logo { width: 22px; height: 22px; flex-shrink: 0; }
+    .footer-logo { width: 22px; height: 22px; flex-shrink: 0; margin-right: 8px; }
     .footer-links { display: flex; gap: 20px; }
     .footer-links a { font-size: 13px; color: var(--text-secondary); text-decoration: none; }
     .footer-links a:hover { color: var(--text-primary); }
@@ -252,16 +252,16 @@
 <nav>
   <a href="#" class="nav-brand">
     <svg class="nav-logo" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="nav-bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse"><stop stop-color="#007AFF"/><stop offset="1" stop-color="#0056D2"/></linearGradient></defs>
+      <defs><linearGradient id="nav-bg" x1="128" y1="128" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#007AFF"/><stop offset="1" stop-color="#0056D2"/></linearGradient></defs>
       <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#nav-bg)"/>
-      <rect x="32" y="38" width="46" height="62" rx="6" fill="#D6EBFF" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
-      <rect x="46" y="26" width="52" height="66" rx="6" fill="#fff" stroke="#CFE6FF" stroke-width="1.5"/>
-      <line x1="55" y1="50" x2="86" y2="50" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <line x1="55" y1="62" x2="86" y2="62" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <line x1="55" y1="74" x2="86" y2="74" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <rect x="29" y="23" width="50" height="24" rx="6" fill="#0D1E35" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-      <polyline points="37,35 43,35 37,35" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="51" y1="35" x2="64" y2="35" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round"/>
+      <rect x="32" y="28" width="46" height="62" rx="6" fill="#D6EBFF" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
+      <rect x="46" y="36" width="52" height="66" rx="6" fill="#fff" stroke="#CFE6FF" stroke-width="1.5"/>
+      <line x1="55" y1="55" x2="86" y2="55" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="67" x2="86" y2="67" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="78" x2="86" y2="78" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <rect x="29" y="81" width="50" height="24" rx="6" fill="#0D1E35" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <polyline points="37,88 43,93 37,98" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="51" y1="98" x2="64" y2="98" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round"/>
     </svg>
     X<span>Copy</span>
   </a>
@@ -275,16 +275,16 @@
   <!-- HERO -->
   <section class="hero">
     <svg class="hero-logo" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="hero-bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse"><stop stop-color="#007AFF"/><stop offset="1" stop-color="#0056D2"/></linearGradient></defs>
+      <defs><linearGradient id="hero-bg" x1="128" y1="128" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#007AFF"/><stop offset="1" stop-color="#0056D2"/></linearGradient></defs>
       <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#hero-bg)"/>
-      <rect x="32" y="38" width="46" height="62" rx="6" fill="#D6EBFF" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
-      <rect x="46" y="26" width="52" height="66" rx="6" fill="#fff" stroke="#CFE6FF" stroke-width="1.5"/>
-      <line x1="55" y1="50" x2="86" y2="50" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <line x1="55" y1="62" x2="86" y2="62" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <line x1="55" y1="74" x2="86" y2="74" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <rect x="29" y="23" width="50" height="24" rx="6" fill="#0D1E35" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-      <polyline points="37,35 43,35 37,35" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="51" y1="35" x2="64" y2="35" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round"/>
+      <rect x="32" y="28" width="46" height="62" rx="6" fill="#D6EBFF" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
+      <rect x="46" y="36" width="52" height="66" rx="6" fill="#fff" stroke="#CFE6FF" stroke-width="1.5"/>
+      <line x1="55" y1="55" x2="86" y2="55" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="67" x2="86" y2="67" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="78" x2="86" y2="78" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <rect x="29" y="81" width="50" height="24" rx="6" fill="#0D1E35" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <polyline points="37,88 43,93 37,98" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="51" y1="98" x2="64" y2="98" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round"/>
     </svg>
     <div class="hero-badge">macOS 菜单栏应用</div>
     <h1>截图秒传远端<br><span class="highlight">路径直入终端</span></h1>
@@ -446,16 +446,16 @@
 <footer>
   <div class="footer-brand">
     <svg class="footer-logo" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><linearGradient id="ft-bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse"><stop stop-color="#007AFF"/><stop offset="1" stop-color="#0056D2"/></linearGradient></defs>
+      <defs><linearGradient id="ft-bg" x1="128" y1="128" x2="0" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#007AFF"/><stop offset="1" stop-color="#0056D2"/></linearGradient></defs>
       <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#ft-bg)"/>
-      <rect x="32" y="38" width="46" height="62" rx="6" fill="#D6EBFF" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
-      <rect x="46" y="26" width="52" height="66" rx="6" fill="#fff" stroke="#CFE6FF" stroke-width="1.5"/>
-      <line x1="55" y1="50" x2="86" y2="50" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <line x1="55" y1="62" x2="86" y2="62" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <line x1="55" y1="74" x2="86" y2="74" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
-      <rect x="29" y="23" width="50" height="24" rx="6" fill="#0D1E35" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-      <polyline points="37,35 43,35 37,35" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <line x1="51" y1="35" x2="64" y2="35" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round"/>
+      <rect x="32" y="28" width="46" height="62" rx="6" fill="#D6EBFF" stroke="rgba(255,255,255,0.65)" stroke-width="1.5"/>
+      <rect x="46" y="36" width="52" height="66" rx="6" fill="#fff" stroke="#CFE6FF" stroke-width="1.5"/>
+      <line x1="55" y1="55" x2="86" y2="55" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="67" x2="86" y2="67" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="78" x2="86" y2="78" stroke="#007AFF" stroke-width="4" stroke-linecap="round"/>
+      <rect x="29" y="81" width="50" height="24" rx="6" fill="#0D1E35" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+      <polyline points="37,88 43,93 37,98" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="51" y1="98" x2="64" y2="98" stroke="#5EEAD4" stroke-width="3" stroke-linecap="round"/>
     </svg>
     X<span>Copy</span>
   </div>
