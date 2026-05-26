@@ -24,21 +24,25 @@ final class GlobalPasteShortcutMonitor {
         hostMatchers = hosts.map { host in
             (host.id, host.strictMatchTokens, host.looseMatchTokens)
         }
+        AppLog.shortcut.info("host matchers updated count=\(hosts.count, privacy: .public)")
     }
 
     func updateShortcut(_ shortcut: PasteShortcut) {
         pasteShortcut = shortcut
+        AppLog.shortcut.info("paste shortcut updated shortcut=\(shortcut.displayParts.joined(), privacy: .public)")
     }
 
     func start(promptForPermission: Bool, onPasteShortcut: @escaping (UUID) -> Void) -> Bool {
         self.onPasteShortcut = onPasteShortcut
 
         guard eventTap == nil else {
+            AppLog.shortcut.info("paste shortcut monitor already running")
             return true
         }
 
         let options = ["AXTrustedCheckOptionPrompt": promptForPermission] as CFDictionary
         guard AXIsProcessTrustedWithOptions(options) else {
+            AppLog.shortcut.error("accessibility/input monitoring trust check failed prompt=\(promptForPermission, privacy: .public)")
             return false
         }
 
@@ -53,6 +57,7 @@ final class GlobalPasteShortcutMonitor {
             callback: Self.eventCallback,
             userInfo: refcon
         ) else {
+            AppLog.shortcut.error("failed to create keyboard event tap")
             return false
         }
 
@@ -64,6 +69,7 @@ final class GlobalPasteShortcutMonitor {
         }
 
         CGEvent.tapEnable(tap: tap, enable: true)
+        AppLog.shortcut.info("keyboard event tap enabled")
         return true
     }
 
@@ -79,10 +85,12 @@ final class GlobalPasteShortcutMonitor {
         eventTap = nil
         runLoopSource = nil
         onPasteShortcut = nil
+        AppLog.shortcut.info("paste shortcut monitor stopped")
     }
 
     func pasteIntoFocusedApp() {
         suppressNextPaste = true
+        AppLog.shortcut.info("posting synthetic Command-V")
 
         let source = CGEventSource(stateID: .hidSystemState)
         let keyDown = CGEvent(keyboardEventSource: source, virtualKey: 9, keyDown: true)
@@ -102,6 +110,7 @@ final class GlobalPasteShortcutMonitor {
 
         if suppressNextPaste {
             suppressNextPaste = false
+            AppLog.shortcut.info("allowing synthetic paste event through")
             return Unmanaged.passUnretained(event)
         }
 
@@ -109,14 +118,19 @@ final class GlobalPasteShortcutMonitor {
             return Unmanaged.passUnretained(event)
         }
 
+        AppLog.shortcut.info("paste shortcut key event captured")
+
         guard ClipboardImageService().hasImage() else {
+            AppLog.clipboard.info("shortcut key event ignored because clipboard has no image")
             return Unmanaged.passUnretained(event)
         }
 
         guard let hostID = matchingHostIDForFocusedWindow() else {
+            AppLog.shortcut.error("shortcut key event ignored because no configured host matched focused window")
             return Unmanaged.passUnretained(event)
         }
 
+        AppLog.shortcut.info("shortcut key event matched hostID=\(hostID.uuidString, privacy: .public)")
         onPasteShortcut?(hostID)
         return nil
     }
@@ -126,15 +140,26 @@ final class GlobalPasteShortcutMonitor {
     }
 
     private func matchingHostIDForFocusedWindow() -> UUID? {
-        if let tty = focusedTerminalTTY(),
-           let target = sessionRegistry.target(forTTY: tty),
-           let hostID = matchingHostID(for: target) {
-            return hostID
+        if let tty = focusedTerminalTTY() {
+            AppLog.session.info("focused terminal tty=\(tty, privacy: .public)")
+            if let target = sessionRegistry.target(forTTY: tty) {
+                AppLog.session.info("session registry target=\(target, privacy: .public)")
+                if let hostID = matchingHostID(for: target) {
+                    return hostID
+                }
+                AppLog.session.error("session registry target did not match any configured host target=\(target, privacy: .public)")
+            } else {
+                AppLog.session.error("no xcopy session registry entry for tty=\(tty, privacy: .public)")
+            }
         }
 
         let text = focusedWindowSearchText()
-        guard !text.isEmpty else { return nil }
+        guard !text.isEmpty else {
+            AppLog.shortcut.error("focused window search text is empty")
+            return nil
+        }
 
+        AppLog.shortcut.info("falling back to focused window title/app matching text=\(text, privacy: .public)")
         return matchingHostID(for: text)
     }
 
@@ -146,14 +171,21 @@ final class GlobalPasteShortcutMonitor {
                 normalizedText.contains(token)
             }
         })?.id {
+            AppLog.shortcut.info("matched configured host with strict token hostID=\(strictMatch.uuidString, privacy: .public)")
             return strictMatch
         }
 
-        return hostMatchers.first { matcher in
+        if let looseMatch = hostMatchers.first(where: { matcher in
             matcher.looseTokens.contains { token in
                 normalizedText.contains(token)
             }
-        }?.id
+        })?.id {
+            AppLog.shortcut.info("matched configured host with loose token hostID=\(looseMatch.uuidString, privacy: .public)")
+            return looseMatch
+        }
+
+        AppLog.shortcut.error("no host matcher matched text=\(normalizedText, privacy: .public)")
+        return nil
     }
 
     private func focusedTerminalTTY() -> String? {
@@ -194,11 +226,13 @@ final class GlobalPasteShortcutMonitor {
         do {
             try process.run()
         } catch {
+            AppLog.session.error("failed to run osascript error=\(error.localizedDescription, privacy: .public)")
             return nil
         }
 
         process.waitUntilExit()
         guard process.terminationStatus == 0 else {
+            AppLog.session.error("osascript failed status=\(process.terminationStatus, privacy: .public)")
             return nil
         }
 

@@ -24,6 +24,7 @@ struct RemoteCopyService {
         }
 
         let command = try commandLine(localFileURL: localFileURL, fileName: fileName, remotePath: remotePath, host: host)
+        AppLog.transfer.info("remote copy command prepared transport=\(host.transport.rawValue, privacy: .public) command=\(command, privacy: .public)")
         try await run(command)
     }
 
@@ -92,15 +93,20 @@ struct RemoteCopyService {
             process.standardOutput = pipe
             process.standardError = pipe
 
+            AppLog.transfer.info("remote copy process starting")
             try process.run()
             process.waitUntilExit()
 
             let data = pipe.fileHandleForReading.readDataToEndOfFile()
             let output = String(data: data, encoding: .utf8) ?? ""
+            let trimmedOutput = output.trimmingCharacters(in: .whitespacesAndNewlines)
 
             guard process.terminationStatus == 0 else {
+                AppLog.transfer.error("remote copy process failed status=\(process.terminationStatus, privacy: .public) output=\(trimmedOutput, privacy: .public)")
                 throw RemoteCopyError.processFailed(command: command, output: output)
             }
+
+            AppLog.transfer.info("remote copy process finished status=0 output=\(trimmedOutput, privacy: .public)")
         }.value
     }
 

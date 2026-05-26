@@ -109,6 +109,24 @@ Verify launch:
 ./script/build_and_run.sh --verify
 ```
 
+Watch app diagnostics while reproducing a failed paste:
+
+```bash
+./script/build_and_run.sh --logs
+```
+
+For a packaged app, stream logs with the bundle identifier used at build time:
+
+```bash
+/usr/bin/log stream --info --style compact --predicate 'subsystem == "com.local.XCopy"'
+```
+
+The SSH wrapper also writes session-detection breadcrumbs to:
+
+```text
+~/.xcopy/logs/ssh-wrapper.log
+```
+
 Package DMG:
 
 ```bash

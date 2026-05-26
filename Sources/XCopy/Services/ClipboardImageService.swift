@@ -22,12 +22,15 @@ enum ClipboardImageError: LocalizedError {
 
 struct ClipboardImageService {
     func hasImage() -> Bool {
-        NSImage(pasteboard: NSPasteboard.general) != nil
+        let hasImage = NSImage(pasteboard: NSPasteboard.general) != nil
+        AppLog.clipboard.info("clipboard image check result=\(hasImage, privacy: .public)")
+        return hasImage
     }
 
     func writeClipboardImageToTemporaryFile() throws -> TemporaryImageFile {
         let pasteboard = NSPasteboard.general
         guard let image = NSImage(pasteboard: pasteboard) else {
+            AppLog.clipboard.error("clipboard image export failed: no image")
             throw ClipboardImageError.noImage
         }
 
@@ -36,6 +39,7 @@ struct ClipboardImageService {
             let bitmap = NSBitmapImageRep(data: tiffData),
             let pngData = bitmap.representation(using: .png, properties: [:])
         else {
+            AppLog.clipboard.error("clipboard image export failed: could not create PNG data")
             throw ClipboardImageError.cannotCreateImageData
         }
 
@@ -44,6 +48,7 @@ struct ClipboardImageService {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let url = directory.appendingPathComponent(fileName)
         try pngData.write(to: url, options: .atomic)
+        AppLog.clipboard.info("clipboard image written path=\(url.path, privacy: .public) bytes=\(pngData.count, privacy: .public)")
         return TemporaryImageFile(url: url, fileName: fileName)
     }
 
@@ -51,6 +56,7 @@ struct ClipboardImageService {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(string, forType: .string)
+        AppLog.clipboard.info("clipboard string updated value=\(string, privacy: .public)")
     }
 
     private static func timestamp() -> String {

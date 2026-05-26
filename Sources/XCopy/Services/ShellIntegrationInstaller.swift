@@ -35,6 +35,7 @@ struct ShellIntegrationInstaller {
         try FileManager.default.createDirectory(at: ttySessionsDirectory, withIntermediateDirectories: true)
         try cliScript.write(to: cliURL, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.posixPermissions: 0o755], ofItemAtPath: cliURL.path)
+        AppLog.shell.info("wrote xcopy ssh wrapper path=\(cliURL.path, privacy: .public)")
 
         let currentProfile: String
         if FileManager.default.fileExists(atPath: zshrcURL.path) {
@@ -48,6 +49,7 @@ struct ShellIntegrationInstaller {
 
         let updatedProfile = replacingIntegrationBlock(in: currentProfile, with: zshIntegrationBlock)
         try updatedProfile.write(to: zshrcURL, atomically: true, encoding: .utf8)
+        AppLog.shell.info("updated shell profile path=\(zshrcURL.path, privacy: .public)")
     }
 
     private func replacingIntegrationBlock(in profile: String, with block: String) -> String {
@@ -119,13 +121,22 @@ struct ShellIntegrationInstaller {
           printf '%s' "$value"
         }
 
+        xcopy_log() {
+          local root="$HOME/.xcopy"
+          mkdir -p "$root/logs"
+          printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" >> "$root/logs/ssh-wrapper.log"
+        }
+
         xcopy_ssh_wrapper() {
           local target
           target="$(xcopy_extract_ssh_target "$@" || true)"
 
           if [ -z "$target" ]; then
+            xcopy_log "ssh-wrapper: no target extracted; exec ssh args=$*"
             exec /usr/bin/ssh "$@"
           fi
+
+          xcopy_log "ssh-wrapper: target=$target tty=$(tty 2>/dev/null || true)"
 
           local root="$HOME/.xcopy"
           local sessions="$root/sessions"
@@ -144,13 +155,18 @@ struct ShellIntegrationInstaller {
               "$(xcopy_json_escape "$tty_path")" \\
               "$$" \\
               "$(date +%s)" > "$tty_session"
+            xcopy_log "ssh-wrapper: wrote session=$tty_session target=$target"
+          else
+            xcopy_log "ssh-wrapper: no tty available; session registry disabled for this ssh process"
           fi
 
           /usr/bin/ssh "$@"
           local code=$?
+          xcopy_log "ssh-wrapper: ssh exited code=$code target=$target"
 
           if [ -n "$tty_session" ]; then
             rm -f "$tty_session"
+            xcopy_log "ssh-wrapper: removed session=$tty_session"
           fi
 
           return "$code"
