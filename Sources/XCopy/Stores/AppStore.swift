@@ -108,14 +108,17 @@ final class AppStore: ObservableObject {
         isTransferring = true
         lastError = nil
         statusMessage = "正在读取剪贴板图片..."
+        AppLog.transfer.info("paste flow started host=\(host.title, privacy: .public) connection=\(host.connectionLabel, privacy: .public) directory=\(host.normalizedDirectory, privacy: .public) transport=\(host.transport.rawValue, privacy: .public)")
 
         do {
             let localImage = try clipboardService.writeClipboardImageToTemporaryFile()
             let remotePath = host.remotePath(fileName: localImage.fileName)
+            AppLog.clipboard.info("clipboard image exported file=\(localImage.fileName, privacy: .public) path=\(localImage.url.path, privacy: .public)")
             statusMessage = "正在复制到 \(host.title)..."
 
             try await remoteCopyService.copy(localFileURL: localImage.url, fileName: localImage.fileName, remotePath: remotePath, host: host)
 
+            AppLog.transfer.info("remote copy succeeded remotePath=\(remotePath, privacy: .public)")
             clipboardService.copyString(remotePath)
             prependHistory(
                 TransferRecord(
@@ -131,6 +134,7 @@ final class AppStore: ObservableObject {
             return true
         } catch {
             let message = error.localizedDescription
+            AppLog.transfer.error("paste flow failed host=\(host.title, privacy: .public) error=\(message, privacy: .public)")
             lastError = message
             statusMessage = "复制失败"
             prependHistory(
@@ -150,6 +154,7 @@ final class AppStore: ObservableObject {
 
     func copyClipboardImage(to hostID: RemoteHost.ID) async -> Bool {
         guard hosts.contains(where: { $0.id == hostID }) else {
+            AppLog.shortcut.error("shortcut matched stale host id=\(hostID.uuidString, privacy: .public)")
             statusMessage = "当前窗口没有匹配的远端"
             return false
         }
@@ -176,6 +181,7 @@ final class AppStore: ObservableObject {
     private func installShellIntegration(updateStatus: Bool) -> Bool {
         do {
             try shellIntegrationInstaller.install()
+            AppLog.shell.info("shell integration installed version=\(self.currentShellIntegrationVersion, privacy: .public)")
             defaults.set(currentShellIntegrationVersion, forKey: shellIntegrationVersionKey)
             if updateStatus {
                 statusMessage = "SSH 集成已安装，重新打开终端后生效"
@@ -183,6 +189,7 @@ final class AppStore: ObservableObject {
             }
             return true
         } catch {
+            AppLog.shell.error("shell integration install failed error=\(error.localizedDescription, privacy: .public)")
             if updateStatus {
                 statusMessage = "SSH 集成安装失败"
                 lastError = error.localizedDescription
@@ -284,10 +291,12 @@ final class AppStore: ObservableObject {
             }
 
             if started {
+                AppLog.shortcut.info("paste shortcut monitor started shortcut=\(self.pasteShortcut.displayParts.joined(), privacy: .public) hosts=\(self.hosts.count, privacy: .public)")
                 needsAccessibilityPermission = false
                 statusMessage = "准备就绪"
                 lastError = nil
             } else {
+                AppLog.shortcut.error("paste shortcut monitor could not start; accessibility/input monitoring permission missing or event tap creation failed")
                 needsAccessibilityPermission = true
                 statusMessage = "需要开启辅助功能权限"
                 lastError = "请在系统设置中允许 XCopy 使用辅助功能/输入监听权限，然后重新开启粘贴触发。"
@@ -300,9 +309,23 @@ final class AppStore: ObservableObject {
     }
 
     private func handlePasteShortcut(hostID: RemoteHost.ID) async {
-        guard autoUploadEnabled, !isTransferring, clipboardService.hasImage() else { return }
+        guard autoUploadEnabled else {
+            AppLog.shortcut.info("shortcut ignored because auto upload is disabled")
+            return
+        }
+        guard !isTransferring else {
+            AppLog.shortcut.info("shortcut ignored because a transfer is already running")
+            return
+        }
+        guard clipboardService.hasImage() else {
+            AppLog.clipboard.info("shortcut ignored because clipboard has no image")
+            return
+        }
+
+        AppLog.shortcut.info("shortcut accepted hostID=\(hostID.uuidString, privacy: .public)")
         let success = await copyClipboardImage(to: hostID)
         if success {
+            AppLog.shortcut.info("posting Command-V into focused app")
             pasteShortcutMonitor.pasteIntoFocusedApp()
         }
     }
