@@ -210,8 +210,131 @@ final class GlobalPasteShortcutMonitor {
             end tell
             """)
         default:
+            return ttyOfFrontmostTerminalProcess(pid: app.processIdentifier)
+        }
+    }
+
+    private func ttyOfFrontmostTerminalProcess(pid: pid_t) -> String? {
+        let children = childProcesses(of: pid)
+        guard !children.isEmpty else { return nil }
+
+        let foregroundPIDs = foregroundProcessPIDs()
+
+        for childPID in children {
+            if foregroundPIDs.contains(childPID),
+               let tty = ttyOfProcess(pid: childPID), !tty.isEmpty {
+                AppLog.session.info("matched foreground child tty via pid walk pid=\(childPID) tty=\(tty, privacy: .public)")
+                return tty
+            }
+        }
+
+        for childPID in children {
+            if let tty = ttyOfProcess(pid: childPID), !tty.isEmpty {
+                AppLog.session.info("matched child tty via pid walk (not foreground) pid=\(childPID) tty=\(tty, privacy: .public)")
+                return tty
+            }
+        }
+
+        return nil
+    }
+
+    private func childProcesses(of ppid: pid_t) -> [pid_t] {
+        let process = Process()
+        let pipe = Pipe()
+
+        process.executableURL = URL(fileURLWithPath: "/bin/ps")
+        process.arguments = ["-o", "pid=,ppid=", "-ax"]
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        do {
+            try process.run()
+        } catch {
+            AppLog.session.error("failed to run ps error=\(error.localizedDescription, privacy: .public)")
+            return []
+        }
+
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else { return [] }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8) else { return [] }
+
+        var result: [pid_t] = []
+        for line in output.components(separatedBy: .newlines) {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard !trimmed.isEmpty else { continue }
+            let parts = trimmed.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+            guard parts.count >= 2,
+                  let pid = pid_t(parts[0]),
+                  let parent = pid_t(parts[1]) else { continue }
+            if parent == ppid {
+                result.append(pid)
+            }
+        }
+        return result
+    }
+
+    private func ttyOfProcess(pid: pid_t) -> String? {
+        let process = Process()
+        let pipe = Pipe()
+
+        process.executableURL = URL(fileURLWithPath: "/bin/ps")
+        process.arguments = ["-p", "\(pid)", "-o", "tty="]
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        do {
+            try process.run()
+        } catch {
             return nil
         }
+
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else { return nil }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8) else { return nil }
+
+        let tty = output.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !tty.isEmpty, tty != "??" else { return nil }
+        return "/dev/\(tty)"
+    }
+
+    private func foregroundProcessPIDs() -> Set<pid_t> {
+        let process = Process()
+        let pipe = Pipe()
+
+        process.executableURL = URL(fileURLWithPath: "/bin/ps")
+        process.arguments = ["-o", "pid=", "-ax", "-O", "state"]
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        do {
+            try process.run()
+        } catch {
+            return []
+        }
+
+        process.waitUntilExit()
+        guard process.terminationStatus == 0 else { return [] }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8) else { return [] }
+
+        var result: Set<pid_t> = []
+        for line in output.components(separatedBy: .newlines) {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard !trimmed.isEmpty else { continue }
+            let parts = trimmed.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+            guard parts.count >= 2,
+                  let pid = pid_t(parts[0]) else { continue }
+            let state = parts[1]
+            if state.contains("+") {
+                result.insert(pid)
+            }
+        }
+        return result
     }
 
     private func runAppleScript(_ script: String) -> String? {
