@@ -41,16 +41,8 @@ private extension NSImage {
         defer {
             image.unlockFocus()
             image.size = targetSize
-            image.isTemplate = false
+            image.isTemplate = true
         }
-
-        guard let context = NSGraphicsContext.current?.cgContext else {
-            return image
-        }
-
-        context.clear(CGRect(origin: .zero, size: targetSize))
-        context.setAllowsAntialiasing(true)
-        context.setShouldAntialias(true)
 
         let scale = pointSize / 16
 
@@ -62,16 +54,21 @@ private extension NSImage {
             NSBezierPath(roundedRect: rect(x, y, width, height), xRadius: radius * scale, yRadius: radius * scale)
         }
 
+        // Build as a stencil (template) icon: black filled regions are the foreground,
+        // transparent areas let the menu bar show through (matching the look of other
+        // macOS menu bar icons). The white clipboard body becomes a transparent cutout.
+        let outer = roundedRect(1.1, 1.1, 13.8, 13.8, radius: 3.2)
+        let clipboardBody = roundedRect(5.1, 3.2, 6.6, 9.2, radius: 1.3)
+        outer.append(clipboardBody)
+        outer.windingRule = .evenOdd
+
+        let clip = roundedRect(6.7, 10.5, 3.4, 1.0, radius: 0.5)
+        let text = roundedRect(6.8, 6.4, 3.2, 1.2, radius: 0.6)
+
         NSColor.black.setFill()
-        roundedRect(1.1, 1.1, 13.8, 13.8, radius: 3.2).fill()
-
-        NSColor.white.setFill()
-        roundedRect(5.1, 3.2, 6.6, 9.2, radius: 1.3).fill()
-
-        NSColor.black.setFill()
-        roundedRect(6.7, 10.5, 3.4, 1.0, radius: 0.5).fill()
-
-        roundedRect(6.8, 6.4, 3.2, 1.2, radius: 0.6).fill()
+        outer.fill()
+        clip.fill()
+        text.fill()
 
         return image
     }
