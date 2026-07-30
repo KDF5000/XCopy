@@ -41,16 +41,8 @@ private extension NSImage {
         defer {
             image.unlockFocus()
             image.size = targetSize
-            image.isTemplate = false
+            image.isTemplate = true
         }
-
-        guard let context = NSGraphicsContext.current?.cgContext else {
-            return image
-        }
-
-        context.clear(CGRect(origin: .zero, size: targetSize))
-        context.setAllowsAntialiasing(true)
-        context.setShouldAntialias(true)
 
         let scale = pointSize / 16
 
@@ -62,16 +54,24 @@ private extension NSImage {
             NSBezierPath(roundedRect: rect(x, y, width, height), xRadius: radius * scale, yRadius: radius * scale)
         }
 
+        // Outer rounded rectangle (the "card" background of the icon).
+        // As a template image, opaque black pixels here become the foreground color
+        // (black on light menu bar, white on dark menu bar).
         NSColor.black.setFill()
         roundedRect(1.1, 1.1, 13.8, 13.8, radius: 3.2).fill()
 
-        NSColor.white.setFill()
+        // Semi-transparent fill for the clipboard body — mimics the Mira-style
+        // "filled outline" look where the inside is not fully transparent but a
+        // lighter shade. For template images we express this via alpha on black:
+        // the system renders low-alpha pixels as a tint of the foreground color.
+        NSColor.black.withAlphaComponent(0.15).setFill()
         roundedRect(5.1, 3.2, 6.6, 9.2, radius: 1.3).fill()
 
+        // Solid foreground details: the clip and the two text bars.
         NSColor.black.setFill()
         roundedRect(6.7, 10.5, 3.4, 1.0, radius: 0.5).fill()
-
         roundedRect(6.8, 6.4, 3.2, 1.2, radius: 0.6).fill()
+        roundedRect(6.8, 8.2, 3.2, 1.2, radius: 0.6).fill()
 
         return image
     }
